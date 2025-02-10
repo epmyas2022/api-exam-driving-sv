@@ -5,7 +5,7 @@ namespace App\Http\Controllers\ExamDriving;
 use App\Http\Controllers\Controller;
 use App\Http\Mock\QuestionMock;
 use App\Http\Requests\v1\FilterQuestionRequest;
-use App\UseCase\GetQuestionExamUseCase;
+use App\UseCase\GetQuestionsExamUseCase;
 use Illuminate\Http\JsonResponse;
 use Laravel\Swagger\Attributes\SwaggerResponse;
 use Laravel\Swagger\Attributes\SwaggerSection;
@@ -14,9 +14,9 @@ use Laravel\Swagger\Attributes\SwaggerSummary;
 #[SwaggerSection("Question")]
 class QuestionController extends Controller
 {
-    private GetQuestionExamUseCase $getQuestionUseCase;
+    private GetQuestionsExamUseCase $getQuestionUseCase;
 
-    public function __construct(GetQuestionExamUseCase $getQuestionUseCase)
+    public function __construct(GetQuestionsExamUseCase $getQuestionUseCase)
     {
         $this->getQuestionUseCase = $getQuestionUseCase;
     }
@@ -25,8 +25,8 @@ class QuestionController extends Controller
     #[SwaggerResponse(QuestionMock::INDEX)]
     public function index(FilterQuestionRequest $request): JsonResponse
     {
-        $question = $this->getQuestionUseCase->execute($request->exam);
+        $questions = $this->getQuestionUseCase->execute($request->exam);
 
-        return response()->json([$question->toArray()]);
+        return response()->json($questions);
     }
 }

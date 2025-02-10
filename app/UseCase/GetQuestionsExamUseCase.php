@@ -6,7 +6,7 @@ use App\Domain\Entities\QuestionEntity;
 use App\Domain\Repositories\ExamRepository;
 use App\Domain\Services\PersistenceService;
 
-class GetQuestionExamUseCase
+class GetQuestionsExamUseCase
 {
     private ExamRepository $examRepository;
     private PersistenceService $persistenceService;
@@ -20,7 +20,12 @@ class GetQuestionExamUseCase
     }
 
 
-    public function execute(?string $type): ?QuestionEntity
+    /**
+     * Get all questions
+     * @param string|null $type
+     * @return array<QuestionEntity>
+     */
+    public function execute(?string $type)
     {
         $question =  $this->examRepository->question($type);
 
@@ -30,6 +35,6 @@ class GetQuestionExamUseCase
             $this->persistenceService->save($question);
         }
 
-        return $question;
+        return $this->persistenceService->all();
     }
 }

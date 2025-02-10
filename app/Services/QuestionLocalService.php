@@ -11,19 +11,40 @@ use Illuminate\Support\Facades\Storage;
 
 class QuestionLocalService extends PersistenceService
 {
-
-    public function save(QuestionEntity $data)
+    private QuestionCollection $questionCollection;
+    public function __construct()
     {
         $jsonContent = Storage::disk('local')->get('question.json');
 
-        $questionCollection = new QuestionCollection();
+        $this->questionCollection = new QuestionCollection();
+        $this->questionCollection->fromJson($jsonContent);
+    }
 
-        $questionCollection->fromJson($jsonContent);
+    /**
+     * Get all questions
+     * @return array<QuestionEntity>
+     */
 
-        $questionCollection->addQuestion($data);
+    public function all()
+    {
+        return $this->questionCollection->takeRandom(10);
+    }
+
+        /**
+     * Find question by id
+     * @param int $id
+     * @return QuestionEntity|null
+     */
+    public function find(int $id) {
+        return $this->questionCollection->getQuestionById($id);
+    }
+
+    public function save(QuestionEntity $data)
+    {
+        $this->questionCollection->addQuestion($data);
 
         Storage::disk('local')
-            ->put('question.json', $questionCollection->toJson());
+            ->put('question.json', $this->questionCollection->toJson());
 
         if ($data->getUrlImage()) {
             $image = file_get_contents(config("app.externalAPI") . $data->getUrlImage());

@@ -44,6 +44,16 @@ class QuestionCollection extends Collection
         return $this->first(fn($question) => $question->getPercentage() === $percentage);
     }
 
+    public function takeRandom(int $number): Collection
+    {
+
+        if ($number > $this->count()) {
+            return $this;
+        }
+
+        return new Self(collect($this->items)->random($number));
+    }
+
     /**
      * @param int $id
      * @return bool

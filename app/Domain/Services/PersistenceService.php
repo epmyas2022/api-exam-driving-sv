@@ -3,6 +3,7 @@
 namespace App\Domain\Services;
 
 use App\Domain\Entities\QuestionEntity;
+
 abstract class PersistenceService
 {
     public function save(QuestionEntity $data) {}
@@ -15,4 +16,11 @@ abstract class PersistenceService
      */
     public function find(int $id) {}
     public function delete(int $id) {}
+
+    /**
+     * Get all questions
+     * @return array<QuestionEntity>
+     */
+
+    public function all() {}
 }
