@@ -4,6 +4,7 @@ namespace App\Http\Controllers\ExamDriving;
 
 use App\Http\Controllers\Controller;
 use App\Http\Mock\QuestionMock;
+use App\Http\Requests\v1\FilterQuestionRequest;
 use App\UseCase\GetQuestionExamUseCase;
 use Illuminate\Http\JsonResponse;
 use Laravel\Swagger\Attributes\SwaggerResponse;
@@ -22,9 +23,9 @@ class QuestionController extends Controller
 
     #[SwaggerSummary("Get question exam and save in persistence")]
     #[SwaggerResponse(QuestionMock::INDEX)]
-    public function index(): JsonResponse
+    public function index(FilterQuestionRequest $request): JsonResponse
     {
-        $question = $this->getQuestionUseCase->execute();
+        $question = $this->getQuestionUseCase->execute($request->exam);
 
         return response()->json($question->toArray());
     }

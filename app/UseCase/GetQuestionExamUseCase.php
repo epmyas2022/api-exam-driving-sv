@@ -20,9 +20,9 @@ class GetQuestionExamUseCase
     }
 
 
-    public function execute(): ?QuestionEntity
+    public function execute(?string $type): ?QuestionEntity
     {
-        $question =  $this->examRepository->question();
+        $question =  $this->examRepository->question($type);
 
         $exist = $this->persistenceService->find($question?->getId());
 

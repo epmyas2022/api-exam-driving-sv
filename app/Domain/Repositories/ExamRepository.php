@@ -17,9 +17,10 @@ abstract class ExamRepository implements GrudRepository
 
     /**
      * Get question
+     * @param string $type
      * @return QuestionEntity
      */
-    public function question(){}
+    public function question(?string $type){}
 
     public function find($id) {}
 }

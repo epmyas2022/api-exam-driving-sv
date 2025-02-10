@@ -4,19 +4,18 @@ namespace App\Repositories;
 
 use App\Domain\Entities\QuestionEntity;
 use App\Domain\Repositories\ExamRepository;
+use App\Enums\ExamType;
 use App\Mapper\QuestionMapper;
 use App\Mapper\QuestionResponseMapper;
 use Illuminate\Support\Facades\Http;
 
 class RemoteExamRepository extends ExamRepository
 {
-
-
-    public function question(): ?QuestionEntity
+    public function question(?string $type): ?QuestionEntity
     {
         $response = Http::asMultipart()
             ->post(config('app.externalAPI') . '/prueba.php', [
-                "exam" => "senalizacion"
+                "exam" => ExamType::fromString($type)
             ]);
 
         $data = $response->json();
