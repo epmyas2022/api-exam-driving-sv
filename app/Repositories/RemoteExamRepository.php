@@ -7,6 +7,7 @@ use App\Domain\Repositories\ExamRepository;
 use App\Enums\ExamType;
 use App\Mapper\QuestionMapper;
 use App\Mapper\QuestionResponseMapper;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Http;
 
 class RemoteExamRepository extends ExamRepository
@@ -23,6 +24,8 @@ class RemoteExamRepository extends ExamRepository
         if ($response->failed() || !$data['exito']) {
             return null;
         }
+
+        $data['objeto']['idCategoria'] = $type;
 
         $questionResponse = QuestionResponseMapper::from($data);
 
