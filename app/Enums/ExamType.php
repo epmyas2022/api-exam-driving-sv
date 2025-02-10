@@ -20,6 +20,9 @@ enum ExamType: string
      */
     public static function fromString(?string $value, self $default = ExamType::GENERAL): string
     {
+        if($value === null) {
+            return $default->value;
+        }
         return self::tryFrom($value)?->value ?? $default?->value;
     }
 }
