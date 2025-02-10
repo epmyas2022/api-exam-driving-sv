@@ -28,7 +28,7 @@ class QuestionLocalService extends PersistenceService
         if ($data->getUrlImage()) {
             $image = file_get_contents(config("app.externalAPI") . $data->getUrlImage());
             Storage::disk('local')
-                ->put('img/' . $data->getUrlImage(), $image);
+                ->put('public/img/' . $data->getUrlImage(), $image);
         }
 
         Log::info('Question saved in local storage: ' . Carbon::now());
