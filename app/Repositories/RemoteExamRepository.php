@@ -25,7 +25,7 @@ class RemoteExamRepository extends ExamRepository
             return null;
         }
 
-        $data['objeto']['idCategoria'] = $type;
+        $data['objeto']['idCategoria'] = ExamType::fromString($type);
 
         $questionResponse = QuestionResponseMapper::from($data);
 
