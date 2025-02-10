@@ -27,6 +27,6 @@ class QuestionController extends Controller
     {
         $question = $this->getQuestionUseCase->execute($request->exam);
 
-        return response()->json($question->toArray());
+        return response()->json([$question->toArray()]);
     }
 }

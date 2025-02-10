@@ -18,7 +18,7 @@ use App\Http\Controllers\ExamDriving\QuestionController;
 
 Route::prefix("v1")->group(function () {
 
-    Route::controller(QuestionController::class)->prefix("question")->group(function () {
+    Route::controller(QuestionController::class)->prefix("questions")->group(function () {
         Route::get("/", "index");
     });
 });

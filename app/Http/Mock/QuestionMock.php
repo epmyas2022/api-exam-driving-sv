@@ -4,7 +4,7 @@ namespace App\Http\Mock;
 
 class QuestionMock
 {
-    const INDEX = [
+    const INDEX = [[
         [
 
             "id" => 491,
@@ -19,8 +19,8 @@ class QuestionMock
             "percentage" => 2.5,
             "isQuestionLast" => false,
             "urlImage" => "../img/491.png",
-            "category" => null
+            "category" => 'libre'
 
         ]
-    ];
+    ]];
 }
