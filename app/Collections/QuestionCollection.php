@@ -44,7 +44,12 @@ class QuestionCollection extends Collection
         return $this->first(fn($question) => $question->getPercentage() === $percentage);
     }
 
-    public function takeRandom(int $number): Collection
+    public function getFilterByCategory(string $category): Collection
+    {
+        return new Self(collect($this->items)->filter(fn($question) => $question->getCategory() === $category));
+    }
+
+    public function takeRandom(int $number): self
     {
 
         if ($number > $this->count()) {
@@ -52,6 +57,11 @@ class QuestionCollection extends Collection
         }
 
         return new Self(collect($this->items)->random($number));
+    }
+
+    public function take($limit): self
+    {
+        return new Self(collect($this->items)->take($limit));
     }
 
     /**

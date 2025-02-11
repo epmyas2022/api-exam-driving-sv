@@ -22,5 +22,5 @@ abstract class PersistenceRepository
      * @return array<QuestionEntity>
      */
 
-    public function all() {}
+    public function all(?string $type) {}
 }

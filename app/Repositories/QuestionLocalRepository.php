@@ -14,7 +14,7 @@ class QuestionLocalRepository extends PersistenceRepository
     private QuestionCollection $questionCollection;
     public function __construct()
     {
-        $jsonContent = Storage::disk('local')->get('question.json');
+        $jsonContent = Storage::disk('local')->get(config('app.outputJson'));
 
         $this->questionCollection = new QuestionCollection();
         $this->questionCollection->fromJson($jsonContent);
@@ -25,17 +25,20 @@ class QuestionLocalRepository extends PersistenceRepository
      * @return array<QuestionEntity>
      */
 
-    public function all()
+    public function all(?string $type)
     {
-        return $this->questionCollection->takeRandom(10);
+            return $this->questionCollection
+                ->when($type, fn($collection) => $collection->getFilterByCategory($type))
+                ->takeRandom(5);
     }
 
-        /**
+    /**
      * Find question by id
      * @param int $id
      * @return QuestionEntity|null
      */
-    public function find(int $id) {
+    public function find(int $id)
+    {
         return $this->questionCollection->getQuestionById($id);
     }
 
@@ -49,7 +52,7 @@ class QuestionLocalRepository extends PersistenceRepository
         if ($data->getUrlImage()) {
             $image = file_get_contents(config("app.externalAPI") . $data->getUrlImage());
             Storage::disk('local')
-                ->put('public/img/' . $data->getUrlImage(), $image);
+                ->put(config('app.outputImage') . $data->getUrlImage(), $image);
         }
 
         Log::info('Question saved in local storage: ' . Carbon::now());

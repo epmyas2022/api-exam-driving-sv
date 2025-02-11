@@ -73,6 +73,11 @@ class QuestionEntity
         return $this->urlImage;
     }
 
+    public function getCategory(): ?string
+    {
+        return $this->category;
+    }
+
     public static function  fromArray(array $data): QuestionEntity
     {
         return self::create(

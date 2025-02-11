@@ -31,10 +31,10 @@ class GetQuestionsExamUseCase
 
         $exist = $this->persistenceRepository->find($question?->getId());
 
-        if (!$exist) {
+        if (!$exist && $question) {
             $this->persistenceRepository->save($question);
         }
 
-        return $this->persistenceRepository->all();
+        return $this->persistenceRepository->all($type);
     }
 }
