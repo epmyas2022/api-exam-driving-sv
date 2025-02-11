@@ -27,9 +27,10 @@ class QuestionLocalRepository extends PersistenceRepository
 
     public function all(?string $type)
     {
-            return $this->questionCollection
-                ->when($type, fn($collection) => $collection->getFilterByCategory($type))
-                ->takeRandom(5);
+        return $this->questionCollection
+            ->when($type, fn($collection) => $collection->getFilterByCategory($type))
+            ->takeRandom(30)
+            ->addDefaultLastQuestion()->values();
     }
 
     /**
