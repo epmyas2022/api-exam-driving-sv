@@ -78,6 +78,11 @@ class QuestionEntity
         return $this->category;
     }
 
+    public function setLastQuestion(bool $isQuestionLast): void
+    {
+        $this->isQuestionLast = $isQuestionLast;
+    }
+
     public static function  fromArray(array $data): QuestionEntity
     {
         return self::create(
