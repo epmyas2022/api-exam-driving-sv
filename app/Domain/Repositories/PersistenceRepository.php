@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Domain\Services;
+namespace App\Domain\Repositories;
 
 use App\Domain\Entities\QuestionEntity;
 
-abstract class PersistenceService
+abstract class PersistenceRepository
 {
     public function save(QuestionEntity $data) {}
     public function update(QuestionEntity $data, int $id) {}

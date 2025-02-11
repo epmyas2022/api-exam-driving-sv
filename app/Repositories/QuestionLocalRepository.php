@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Services;
+namespace App\Repositories;
 
 use App\Collections\QuestionCollection;
-use App\Domain\Services\PersistenceService;
 use App\Domain\Entities\QuestionEntity;
+use App\Domain\Repositories\PersistenceRepository;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
-class QuestionLocalService extends PersistenceService
+class QuestionLocalRepository extends PersistenceRepository
 {
     private QuestionCollection $questionCollection;
     public function __construct()

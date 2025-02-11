@@ -4,19 +4,19 @@ namespace App\UseCase;
 
 use App\Domain\Entities\QuestionEntity;
 use App\Domain\Repositories\ExamRepository;
-use App\Domain\Services\PersistenceService;
+use App\Domain\Repositories\PersistenceRepository;
 
 class GetQuestionsExamUseCase
 {
     private ExamRepository $examRepository;
-    private PersistenceService $persistenceService;
+    private PersistenceRepository $persistenceRepository;
 
     public function __construct(
         ExamRepository $examRepository,
-        PersistenceService $persistenceService
+        PersistenceRepository $persistenceRepository
     ) {
         $this->examRepository = $examRepository;
-        $this->persistenceService = $persistenceService;
+        $this->persistenceRepository = $persistenceRepository;
     }
 
 
@@ -29,12 +29,12 @@ class GetQuestionsExamUseCase
     {
         $question =  $this->examRepository->question($type);
 
-        $exist = $this->persistenceService->find($question?->getId());
+        $exist = $this->persistenceRepository->find($question?->getId());
 
         if (!$exist) {
-            $this->persistenceService->save($question);
+            $this->persistenceRepository->save($question);
         }
 
-        return $this->persistenceService->all();
+        return $this->persistenceRepository->all();
     }
 }
