@@ -4,7 +4,6 @@ namespace App\Providers;
 
 use App\Domain\Repositories\ExamRepository;
 use App\Domain\Repositories\PersistenceRepository;
-use App\Repositories\LocalExamRepository;
 use App\Repositories\QuestionLocalRepository;
 use Illuminate\Support\ServiceProvider;
 use App\Repositories\RemoteExamRepository;
@@ -19,7 +18,7 @@ class AppServiceProvider extends ServiceProvider
 
         $this->app->bind(
             ExamRepository::class,
-            LocalExamRepository::class
+            RemoteExamRepository::class
         );
 
         $this->app->bind(
