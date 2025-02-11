@@ -5,6 +5,8 @@ namespace App\Repositories;
 use App\Collections\QuestionCollection;
 use App\Domain\Entities\QuestionEntity;
 use App\Domain\Repositories\PersistenceRepository;
+use App\Http\Resources\HeaderQuestionResource;
+use App\Http\Resources\QuestionResource;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
@@ -18,6 +20,7 @@ class QuestionLocalRepository extends PersistenceRepository
 
         $this->questionCollection = new QuestionCollection();
         $this->questionCollection->fromJson($jsonContent);
+
     }
 
     /**
@@ -27,10 +30,12 @@ class QuestionLocalRepository extends PersistenceRepository
 
     public function all(?string $type)
     {
-        return $this->questionCollection
+        $questions =  $this->questionCollection
             ->when($type, fn($collection) => $collection->getFilterByCategory($type))
             ->takeRandom(30)
-            ->addDefaultLastQuestion()->values();
+            ->addDefaultLastQuestion()
+            ->toResource(QuestionResource::class);
+        return new HeaderQuestionResource($questions);
     }
 
     /**
@@ -48,7 +53,7 @@ class QuestionLocalRepository extends PersistenceRepository
         $this->questionCollection->addQuestion($data);
 
         Storage::disk('local')
-            ->put('question.json', $this->questionCollection->toJson());
+            ->put(config('app.outputJson'), $this->questionCollection->toResourceJson(QuestionResource::class));
 
         if ($data->getUrlImage()) {
             $image = file_get_contents(config("app.externalAPI") . $data->getUrlImage());

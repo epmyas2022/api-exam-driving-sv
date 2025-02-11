@@ -3,6 +3,7 @@
 namespace App\Collections;
 
 use App\Domain\Entities\QuestionEntity;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Collection;
 
 class QuestionCollection extends Collection
@@ -94,5 +95,18 @@ class QuestionCollection extends Collection
         $this->items  = collect($data)->map(function ($question) {
             return QuestionEntity::fromArray($question);
         });
+    }
+
+    /**
+     * @param JsonResource $resource
+     */
+    public function toResource($resource)
+    {
+        return $resource::collection($this->items);
+    }
+
+    public function toResourceJson($resource)
+    {
+        return $resource::collection($this->items)->toJson();
     }
 }

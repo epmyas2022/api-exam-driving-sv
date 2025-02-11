@@ -78,6 +78,16 @@ class QuestionEntity
         return $this->category;
     }
 
+    public function getQuestion(): string
+    {
+        return $this->question;
+    }
+
+    public function getPercentage(): float
+    {
+        return $this->percentage;
+    }
+
     public function setLastQuestion(bool $isQuestionLast): void
     {
         $this->isQuestionLast = $isQuestionLast;
