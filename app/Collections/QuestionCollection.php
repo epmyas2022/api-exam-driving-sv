@@ -24,6 +24,15 @@ class QuestionCollection extends Collection
         parent::__construct($items);
     }
 
+    public function addDefaultLastQuestion()
+    {
+        if ($this->count() === 0) {
+            return new Self($this->items);
+        }
+        collect($this->items)->last()->setLastQuestion(true);
+
+        return new Self($this->items);
+    }
     public function addQuestion(QuestionEntity $question)
     {
         $this->push($question);
