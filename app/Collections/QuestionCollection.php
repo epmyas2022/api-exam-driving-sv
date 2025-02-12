@@ -43,7 +43,7 @@ class QuestionCollection extends Collection
         $questionExist->getHeader()->setTotal($questionExist->getSize());
     }
 
-    public function getQuestionById(int $id): ?ItemQuestionEntity
+    public function getQuestionById(int $id): ?QuestionEntity
     {
         return collect($this->items)->first(fn($question) =>
         collect($question->getQuestions())->first(fn($item) => $item->getId() === $id));
@@ -65,6 +65,10 @@ class QuestionCollection extends Collection
             ->values());
     }
 
+    public function takeRandom(int $number): self
+    {
+        return new Self(collect($this->items)->random($number)->values());
+    }
 
     public function takeRandomInQuestions(int $number): self
     {

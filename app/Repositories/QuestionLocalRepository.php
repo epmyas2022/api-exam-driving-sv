@@ -3,11 +3,8 @@
 namespace App\Repositories;
 
 use App\Collections\QuestionCollection;
-use App\Domain\Entities\ItemQuestionEntity;
 use App\Domain\Entities\QuestionEntity;
 use App\Domain\Repositories\PersistenceRepository;
-use App\Http\Resources\HeaderQuestionResource;
-use App\Http\Resources\QuestionResource;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
@@ -27,16 +24,16 @@ class QuestionLocalRepository extends PersistenceRepository
 
 
 
-    /**
-     * Get all questions
-     * @return QuestionEntity
-     */
-
-    public function all(?string $type)
+    public function all(?string $type, int $number = 5)
     {
-        return $this->questionCollection
-            ->when($type, fn($collection) => $collection->filterByCategory($type))
-            ->takeRandomInQuestions(5)->first()->toArray();
+
+        if ($type) {
+            return $this->questionCollection->filterByCategory($type)
+                ?->takeRandomInQuestions($number)
+                ?->first()?->toArray();
+        }
+
+        return $this->questionCollection?->takeRandomInQuestions($number);
     }
     /**
      * Find question by id

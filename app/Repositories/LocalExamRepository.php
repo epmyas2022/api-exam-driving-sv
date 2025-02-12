@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Storage;
 
 class LocalExamRepository extends ExamRepository
 {
-    public function question(?string $type): ?QuestionEntity
+    public function questions(?string $type): ?QuestionEntity
     {
 
         $jsonContent = Storage::disk('local')->get(config('app.outputJson'));
@@ -18,7 +18,8 @@ class LocalExamRepository extends ExamRepository
 
         $questionCollection->fromJson($jsonContent);
 
-        return $questionCollection->takeRandom(1)->first();
-
+        return $questionCollection
+            ->when($type, fn($collection) => $collection->filterByCategory($type))
+            ->takeRandomInQuestions(5)->first();
     }
 }

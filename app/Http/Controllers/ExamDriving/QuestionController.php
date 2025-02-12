@@ -25,7 +25,7 @@ class QuestionController extends Controller
     #[SwaggerResponse(QuestionMock::INDEX)]
     public function index(FilterQuestionRequest $request): JsonResponse
     {
-        $questions = $this->getQuestionUseCase->execute($request->exam);
+        $questions = $this->getQuestionUseCase->execute($request->exam, $request->size);
 
         return response()->json($questions);
     }

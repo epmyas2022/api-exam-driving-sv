@@ -25,6 +25,7 @@ class FilterQuestionRequest extends Request
     {
         return [
             'exam' => ['nullable', 'string', Rule::enum(ExamType::class)],
+            'size' => ['nullable', 'integer', 'min:1', 'max:100']
         ];
     }
 }

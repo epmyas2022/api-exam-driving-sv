@@ -28,11 +28,13 @@ class GetQuestionsExamUseCase
     {
         $questions =  $this->examRepository->questions($type);
 
-        foreach ($questions->getQuestions() as $question) {
+        if ($questions) {
+            foreach ($questions?->getQuestions() as $question) {
 
-            $exist = $this->persistenceRepository->find($question->getId());
-            if (!$exist) {
-                $this->persistenceRepository->save($questions);
+                $exist = $this->persistenceRepository->find($question->getId());
+                if (!$exist) {
+                    $this->persistenceRepository->save($questions);
+                }
             }
         }
         return $this->persistenceRepository->all($type);

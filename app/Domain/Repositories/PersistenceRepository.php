@@ -2,7 +2,6 @@
 
 namespace App\Domain\Repositories;
 
-use App\Domain\Entities\ItemQuestionEntity;
 use App\Domain\Entities\QuestionEntity;
 abstract class PersistenceRepository
 {
@@ -22,5 +21,5 @@ abstract class PersistenceRepository
      * @return array<QuestionEntity>
      */
 
-    public function all(?string $type) {}
+    public function all(?string $type, int $number = 5) {}
 }
