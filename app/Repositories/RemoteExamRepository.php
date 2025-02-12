@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Http;
 
 class RemoteExamRepository extends ExamRepository
 {
-    public function question(?string $type): ?QuestionEntity
+    public function questions(?string $type): ?QuestionEntity
     {
         $response = Http::asMultipart()
             ->post(config('app.externalAPI') . '/prueba.php', [

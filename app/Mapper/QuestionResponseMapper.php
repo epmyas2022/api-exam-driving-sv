@@ -3,8 +3,11 @@
 namespace App\Mapper;
 
 use App\Domain\Entities\QuestionEntity;
-use App\Domain\ValueObjects\OptionalParams;
+use App\Domain\ValueObjects\AnswerItem;
+use App\Domain\Entities\HeaderQuestionEntity;
+use App\Domain\Entities\ItemQuestionEntity;
 use Illuminate\Support\Arr;
+use Ramsey\Uuid\Uuid;
 
 class QuestionResponseMapper
 {
@@ -12,9 +15,8 @@ class QuestionResponseMapper
     private int $id;
     private string $interrogante;
     private array $soluciones;
-    private string $respCorrecta;
+    private int $respCorrecta;
     private float $porcentaje;
-    private ?bool $isEnd;
     private ?string $imagen;
     private ?string $idCategoria;
 
@@ -24,7 +26,6 @@ class QuestionResponseMapper
         array $soluciones,
         string $respCorrecta,
         float $porcentaje,
-        ?bool $isEnd,
         ?object $optional
     ) {
         $this->id = $id;
@@ -32,7 +33,6 @@ class QuestionResponseMapper
         $this->soluciones = $soluciones;
         $this->respCorrecta = $respCorrecta;
         $this->porcentaje = $porcentaje;
-        $this->isEnd = $isEnd;
         $this->imagen = $optional?->imagen;
         $this->idCategoria = $optional?->idCategoria;
     }
@@ -50,7 +50,6 @@ class QuestionResponseMapper
             ],
             Arr::get($data, 'objeto.respCorrecta'),
             Arr::get($data, 'porcentaje'),
-            Arr::get($data, 'isEnd', false),
             (object) [
                 'imagen' => Arr::get($data, 'objeto.imagen'),
                 'idCategoria' => Arr::get($data, 'objeto.idCategoria'),
@@ -61,19 +60,26 @@ class QuestionResponseMapper
 
     public function toEntity(): QuestionEntity
     {
-        $optionalParams = new OptionalParams(
-            $this->imagen,
-            $this->idCategoria
-        );
-
         return QuestionEntity::create(
-            $this->id,
-            $this->interrogante,
-            $this->soluciones,
-            $this->respCorrecta,
-            $this->porcentaje,
-            $this->isEnd ?? false,
-            $optionalParams
+            new HeaderQuestionEntity(
+                Uuid::uuid4()->toString(),
+                $this->idCategoria,
+                1
+            ),
+            [
+                new ItemQuestionEntity(
+                    $this->id,
+                    $this->interrogante,
+                    $this->imagen,
+                    $this->porcentaje,
+                    collect($this->soluciones)
+                        ->map(
+                            fn($solucion, $index) =>
+                            new AnswerItem($solucion, $index + 1 === $this->respCorrecta)
+                        )->toArray()
+                )
+            ]
+
         );
     }
 }

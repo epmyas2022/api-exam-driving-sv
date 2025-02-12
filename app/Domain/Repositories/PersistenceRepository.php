@@ -2,8 +2,8 @@
 
 namespace App\Domain\Repositories;
 
+use App\Domain\Entities\ItemQuestionEntity;
 use App\Domain\Entities\QuestionEntity;
-
 abstract class PersistenceRepository
 {
     public function save(QuestionEntity $data) {}

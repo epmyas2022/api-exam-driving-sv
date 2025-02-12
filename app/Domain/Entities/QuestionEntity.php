@@ -2,109 +2,84 @@
 
 namespace App\Domain\Entities;
 
-use App\Domain\ValueObjects\OptionalParams;
+use App\Domain\ValueObjects\AnswerItem;
 
 class QuestionEntity
 {
-    private int $id;
-    private string $question;
-    private array $answers;
-    private int $correctAnswer;
-    private float $percentage;
-    private bool $isQuestionLast;
-    private ?string $urlImage;
-    private ?string $category;
+    private HeaderQuestionEntity $header;
 
-    private function __construct(
-        int $id,
-        string $question,
-        array $answers,
-        int $correctAnswer,
-        float $percentage,
-        bool $isQuestionLast,
-        OptionalParams $optionalParams
-    ) {
-        $this->id = $id;
-        $this->question = $question;
-        $this->answers = $answers;
-        $this->correctAnswer = $correctAnswer;
-        $this->percentage = $percentage;
-        $this->isQuestionLast = $isQuestionLast;
+    /**
+     * @var QuestionItem[]
+     */
+    private array $questions;
 
-        $this->urlImage = $optionalParams->getUrlImage();
-        $this->category = $optionalParams->getCategory();
+    public function __construct(HeaderQuestionEntity $header, array $questions)
+    {
+        $this->header = $header;
+        $this->questions = $questions;
     }
+
     public static function create(
-        int $id,
-        string $question,
-        array $answers,
-        int $correctAnswer,
-        float $percentage,
-        bool $isQuestionLast,
-        OptionalParams $optionalParams
+        HeaderQuestionEntity $header,
+        array $questions
     ): QuestionEntity {
         return new self(
-            $id,
-            $question,
-            $answers,
-            $correctAnswer,
-            $percentage,
-            $isQuestionLast,
-            $optionalParams
+            $header,
+            $questions
         );
     }
 
-    public function getId(): int
+    public function getHeader(): HeaderQuestionEntity
     {
-        return $this->id;
+        return $this->header;
     }
 
-    public function getAnswers(): array
+    /**
+     * @return ItemQuestionEntity[]
+     */
+    public function getQuestions(): array
     {
-        return $this->answers;
+        return $this->questions;
     }
 
-    public function getCorrectAnswer(): int
+    public function setQuestions(array $questions): void
     {
-        return $this->correctAnswer;
-    }
-    public function getUrlImage(): ?string
-    {
-        return $this->urlImage;
+        $this->questions = $questions;
     }
 
-    public function getCategory(): ?string
+    public function addQuestions( $questions): void
     {
-        return $this->category;
+        $this->questions = array_merge($this->questions, $questions);
     }
 
-    public function getQuestion(): string
+    public function getSize(): int
     {
-        return $this->question;
-    }
-
-    public function getPercentage(): float
-    {
-        return $this->percentage;
-    }
-
-    public function setLastQuestion(bool $isQuestionLast): void
-    {
-        $this->isQuestionLast = $isQuestionLast;
+        return count($this->questions);
     }
 
     public static function  fromArray(array $data): QuestionEntity
     {
         return self::create(
-            $data['id'],
-            $data['question'],
-            $data['answers'],
-            $data['correctAnswer'],
-            $data['percentage'],
-            $data['isQuestionLast'],
-            new OptionalParams(
-                $data['urlImage'],
-                $data['category']
+            new HeaderQuestionEntity(
+                $data['id'],
+                $data['category'],
+                $data['total']
+            ),
+            array_map(
+                fn($question) => new ItemQuestionEntity(
+                    $question['id'],
+                    $question['question'],
+                    $question['image'],
+                    $question['percentage'],
+                    array_map(
+                        fn($answer) => new AnswerItem(
+                            $answer['answer'],
+                            $answer['isCorrect']
+                        ),
+                        $question['answers']
+                    )
+                ),
+                $data['listAnswer']
             )
         );
     }
@@ -112,14 +87,13 @@ class QuestionEntity
     public function toArray(): array
     {
         return [
-            'id' => $this->id,
-            'question' => $this->question,
-            'answers' => $this->answers,
-            'correctAnswer' => $this->correctAnswer,
-            'percentage' => $this->percentage,
-            'isQuestionLast' => $this->isQuestionLast,
-            'urlImage' => $this->urlImage,
-            'category' => $this->category,
+            'id' => $this->header->getId(),
+            'category' => $this->header->getCategory(),
+            'total' => $this->header->getTotal(),
+            'listAnswer' => array_map(
+                fn($question) => $question->toArray(),
+                $this->questions
+            )
         ];
     }
 }

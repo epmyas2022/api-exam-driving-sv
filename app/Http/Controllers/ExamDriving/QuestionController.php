@@ -5,7 +5,6 @@ namespace App\Http\Controllers\ExamDriving;
 use App\Http\Controllers\Controller;
 use App\Http\Mock\QuestionMock;
 use App\Http\Requests\v1\FilterQuestionRequest;
-use App\Http\Resources\HeaderQuestionResource;
 use App\UseCase\GetQuestionsExamUseCase;
 use Illuminate\Http\JsonResponse;
 use Laravel\Swagger\Attributes\SwaggerResponse;

@@ -27,14 +27,15 @@ class GetQuestionsExamUseCase
      */
     public function execute(?string $type)
     {
-        $question =  $this->examRepository->question($type);
+        $questions =  $this->examRepository->questions($type);
 
-        $exist = $this->persistenceRepository->find($question?->getId());
+        foreach ($questions->getQuestions() as $question) {
 
-        if (!$exist && $question) {
-            $this->persistenceRepository->save($question);
+            $exist = $this->persistenceRepository->find($question->getId());
+            if (!$exist) {
+                $this->persistenceRepository->save($questions);
+            }
         }
-
         return $this->persistenceRepository->all($type);
     }
 }

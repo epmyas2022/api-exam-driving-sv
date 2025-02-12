@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Collections\QuestionCollection;
+use App\Domain\Entities\ItemQuestionEntity;
 use App\Domain\Entities\QuestionEntity;
 use App\Domain\Repositories\PersistenceRepository;
 use App\Http\Resources\HeaderQuestionResource;
@@ -14,30 +15,29 @@ use Illuminate\Support\Facades\Storage;
 class QuestionLocalRepository extends PersistenceRepository
 {
     private QuestionCollection $questionCollection;
+
     public function __construct()
     {
         $jsonContent = Storage::disk('local')->get(config('app.outputJson'));
 
         $this->questionCollection = new QuestionCollection();
-        $this->questionCollection->fromJson($jsonContent);
 
+        $this->questionCollection->fromJson($jsonContent);
     }
+
+
 
     /**
      * Get all questions
-     * @return array<QuestionEntity>
+     * @return QuestionEntity
      */
 
     public function all(?string $type)
     {
-        $questions =  $this->questionCollection
-            ->when($type, fn($collection) => $collection->getFilterByCategory($type))
-            ->takeRandom(30)
-            ->addDefaultLastQuestion()
-            ->toResource(QuestionResource::class);
-        return new HeaderQuestionResource($questions);
+        return $this->questionCollection
+            ->when($type, fn($collection) => $collection->filterByCategory($type))
+            ->takeRandomInQuestions(5);
     }
-
     /**
      * Find question by id
      * @param int $id
@@ -50,15 +50,23 @@ class QuestionLocalRepository extends PersistenceRepository
 
     public function save(QuestionEntity $data)
     {
-        $this->questionCollection->addQuestion($data);
+
+        $this->questionCollection->upsertQuestions($data);
 
         Storage::disk('local')
-            ->put(config('app.outputJson'), $this->questionCollection->toResourceJson(QuestionResource::class));
+            ->put(
+                config('app.outputJson'),
+                $this->questionCollection->toJson()
+            );
 
-        if ($data->getUrlImage()) {
-            $image = file_get_contents(config("app.externalAPI") . $data->getUrlImage());
-            Storage::disk('local')
-                ->put(config('app.outputImage') . $data->getUrlImage(), $image);
+
+        foreach ($data->getQuestions() as $question) {
+
+            if ($question->getImage()) {
+                $image = file_get_contents(config("app.externalAPI") . $question->getImage());
+                Storage::disk('local')
+                    ->put(config('app.outputImage') . $question->getImage(), $image);
+            }
         }
 
         Log::info('Question saved in local storage: ' . Carbon::now());

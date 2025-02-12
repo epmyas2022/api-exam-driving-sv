@@ -2,6 +2,7 @@
 
 namespace App\Collections;
 
+use App\Domain\Entities\ItemQuestionEntity;
 use App\Domain\Entities\QuestionEntity;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Collection;
@@ -15,7 +16,6 @@ class QuestionCollection extends Collection
      */
     protected $items = [];
 
-
     /**
      * QuestionCollection constructor.
      * @param array<QuestionEntity> $items
@@ -25,49 +25,61 @@ class QuestionCollection extends Collection
         parent::__construct($items);
     }
 
-    public function addDefaultLastQuestion()
-    {
-        if ($this->count() === 0) {
-            return new Self($this->items);
-        }
-        collect($this->items)->last()->setLastQuestion(true);
-
-        return new Self($this->items);
-    }
     public function addQuestion(QuestionEntity $question)
     {
         $this->push($question);
     }
 
-    public function getQuestionById(int $id): ?QuestionEntity
-    {
-        return $this->first(fn($question) => $question->getId() === $id);
-    }
-
-    public function getQuestionByCategory(string $category): ?QuestionEntity
-    {
-        return $this->first(fn($question) => $question->getCategory() === $category);
-    }
-
-    public function getQuestionByPercentage(float $percentage): ?QuestionEntity
-    {
-        return $this->first(fn($question) => $question->getPercentage() === $percentage);
-    }
-
-    public function getFilterByCategory(string $category): Collection
-    {
-        return new Self(collect($this->items)->filter(fn($question) => $question->getCategory() === $category));
-    }
-
-    public function takeRandom(int $number): self
+    public function upsertQuestions(QuestionEntity $question)
     {
 
-        if ($number > $this->count()) {
-            return $this;
+        $questionExist = $this->getHeaderCategory($question->getHeader()->getCategory());
+        if (!$questionExist) {
+            $this->addQuestion($question);
+            return;
         }
 
-        return new Self(collect($this->items)->random($number));
+        $questionExist->addQuestions($question->getQuestions());
+        $questionExist->getHeader()->setTotal($questionExist->getSize());
     }
+
+    public function getQuestionById(int $id): ?ItemQuestionEntity
+    {
+        return collect($this->items)->first(fn($question) =>
+        collect($question->getQuestions())->first(fn($item) => $item->getId() === $id));
+    }
+
+    public function getHeaderId(int $id): ?QuestionEntity
+    {
+        return collect($this->items)->first(fn($question) => $question->getHeader()->getId() === $id);
+    }
+
+    public function getHeaderCategory(string $category): ?QuestionEntity
+    {
+        return collect($this->items)->first(fn($question) => $question->getHeader()->getCategory() === $category);
+    }
+
+    public function filterByCategory(string $category): self
+    {
+        return new Self(collect($this->items)->filter(fn($question) => $question->getHeader()->getCategory() === $category)
+            ->values());
+    }
+
+
+    public function takeRandomInQuestions(int $number): self
+    {
+        return new Self(collect($this->items)->map(function ($question) use ($number) {
+
+            if ($question->getSize() <= $number) {
+                return $question;
+            }
+            $question->setQuestions(collect($question->getQuestions())
+                ->random($number)->values()->toArray());
+            return $question;
+        }));
+    }
+
+
 
     public function take($limit): self
     {

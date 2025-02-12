@@ -19,7 +19,7 @@ return [
     'name' => env('APP_NAME', 'Laravel'),
 
     'externalAPI' => env('EXTERNAL_API', 'https://manejasv.com/categorias/view/'),
-    'outputJson' => env('OUTPUT_JSON', 'question.json'),
+    'outputJson' => env('OUTPUT_JSON', 'questions.json'),
     'outputImage' => env('OUTPUT_IMAGE', 'public/img/'),
     /*
     |--------------------------------------------------------------------------
