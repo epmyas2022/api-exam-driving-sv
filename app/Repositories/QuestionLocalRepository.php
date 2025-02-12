@@ -36,7 +36,7 @@ class QuestionLocalRepository extends PersistenceRepository
     {
         return $this->questionCollection
             ->when($type, fn($collection) => $collection->filterByCategory($type))
-            ->takeRandomInQuestions(5);
+            ->takeRandomInQuestions(5)->first()->toArray();
     }
     /**
      * Find question by id

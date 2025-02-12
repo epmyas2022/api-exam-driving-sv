@@ -23,7 +23,6 @@ class GetQuestionsExamUseCase
     /**
      * Get all questions
      * @param string|null $type
-     * @return array<QuestionEntity>
      */
     public function execute(?string $type)
     {

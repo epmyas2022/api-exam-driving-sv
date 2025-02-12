@@ -75,15 +75,9 @@ class QuestionCollection extends Collection
             }
             $question->setQuestions(collect($question->getQuestions())
                 ->random($number)->values()->toArray());
+            $question->getHeader()->setTotal($question->getSize());
             return $question;
         }));
-    }
-
-
-
-    public function take($limit): self
-    {
-        return new Self(collect($this->items)->take($limit));
     }
 
     /**

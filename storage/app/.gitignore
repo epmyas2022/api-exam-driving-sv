@@ -1,4 +1,6 @@
 *
 !public/
 !.gitignore
-!question.json
+!questions.json
+!public/img
+!public/img/*
