@@ -53,6 +53,11 @@ class ItemQuestionEntity{
         $this->question = $question;
     }
 
+    public function addImage( $image): void
+    {
+        $this->image = $image;
+    }
+
 
     /**
      * @return AnswerItem[]

@@ -8,7 +8,7 @@ use App\Domain\Entities\HeaderQuestionEntity;
 use App\Domain\Entities\ItemQuestionEntity;
 use Illuminate\Support\Arr;
 use Ramsey\Uuid\Uuid;
-
+use Illuminate\Support\Facades\Storage;
 class QuestionResponseMapper
 {
 

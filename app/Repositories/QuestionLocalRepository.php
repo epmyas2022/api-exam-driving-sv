@@ -47,24 +47,23 @@ class QuestionLocalRepository extends PersistenceRepository
 
     public function save(QuestionEntity $data)
     {
-
-        $this->questionCollection->upsertQuestions($data);
-
-        Storage::disk('local')
-            ->put(
-                config('app.outputJson'),
-                $this->questionCollection->toJson()
-            );
-
-
         foreach ($data->getQuestions() as $question) {
 
             if ($question->getImage()) {
                 $image = file_get_contents(config("app.externalAPI") . $question->getImage());
-                Storage::disk('local')
-                    ->put(config('app.outputImage') . $question->getImage(), $image);
+
+                $pathImage = config('app.outputImage') . basename($question->getImage());
+
+                $image = Storage::disk('local')
+                    ->put($pathImage, $image);
+
+
+                $question->addImage(url(Storage::url($pathImage)));
             }
         }
+        $this->questionCollection->upsertQuestions($data);
+
+        Storage::disk('local')->put(config('app.outputJson'), $this->questionCollection->toJson());
 
         Log::info('Question saved in local storage: ' . Carbon::now());
     }

@@ -107,16 +107,6 @@ class QuestionCollection extends Collection
         });
     }
 
-    /**
-     * @param JsonResource $resource
-     */
-    public function toResource($resource)
-    {
-        return $resource::collection($this->items);
-    }
 
-    public function toResourceJson($resource)
-    {
-        return $resource::collection($this->items)->toJson();
-    }
+
 }

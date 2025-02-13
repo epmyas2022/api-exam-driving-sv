@@ -27,6 +27,6 @@ class QuestionController extends Controller
     {
         $questions = $this->getQuestionUseCase->execute($request->exam, $request->size);
 
-        return response()->json($questions);
+        return response()->json($questions, 200, [], JSON_UNESCAPED_SLASHES);
     }
 }
