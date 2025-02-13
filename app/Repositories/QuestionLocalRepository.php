@@ -5,6 +5,7 @@ namespace App\Repositories;
 use App\Collections\QuestionCollection;
 use App\Domain\Entities\QuestionEntity;
 use App\Domain\Repositories\PersistenceRepository;
+use App\Http\Resources\QuestionResource;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
@@ -27,13 +28,19 @@ class QuestionLocalRepository extends PersistenceRepository
     public function all(?string $type, int $number = 5)
     {
 
+        $castImage = fn($image) => $image ?
+            url(Storage::url(config('app.outputImage') . $image)) : null;
+
         if ($type) {
             return $this->questionCollection->filterByCategory($type)
                 ?->takeRandomInQuestions($number)
+                ?->setCastImageQuestions($castImage)
                 ?->first()?->toArray();
         }
 
-        return $this->questionCollection?->takeRandomInQuestions($number);
+        return $this->questionCollection
+            ?->setCastImageQuestions($castImage)
+            ?->takeRandomInQuestions($number);
     }
     /**
      * Find question by id
@@ -50,15 +57,20 @@ class QuestionLocalRepository extends PersistenceRepository
         foreach ($data->getQuestions() as $question) {
 
             if ($question->getImage()) {
-                $image = file_get_contents(config("app.externalAPI") . $question->getImage());
+                $image = @file_get_contents(config("app.externalAPI") . $question->getImage());
 
-                $pathImage = config('app.outputImage') . basename($question->getImage());
+                if (!$image) {
+                    return;
+                }
+
+                $nameImage = basename($question->getImage());
+
+                $pathImage = config('app.outputImage') . $nameImage;
 
                 $image = Storage::disk('local')
                     ->put($pathImage, $image);
 
-
-                $question->addImage(url(Storage::url($pathImage)));
+                $question->addImage($nameImage);
             }
         }
         $this->questionCollection->upsertQuestions($data);

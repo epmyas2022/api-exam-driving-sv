@@ -108,5 +108,19 @@ class QuestionCollection extends Collection
     }
 
 
+    public function setCastImageQuestions($callback)
+    {
+        $this->items = collect($this->items)->map(function ($question) use ($callback) {
+            $question->setQuestions(collect($question->getQuestions())->map(function ($item) use ($callback) {
 
+                $item->addImage($callback($item->getImage()));
+
+                return $item;
+            })->toArray());
+
+            return $question;
+        })->toArray();
+
+        return $this;
+    }
 }
