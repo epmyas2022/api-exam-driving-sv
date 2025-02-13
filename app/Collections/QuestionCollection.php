@@ -123,4 +123,20 @@ class QuestionCollection extends Collection
 
         return $this;
     }
+
+    public function setCastQuestions($callback, $getMethod, $setMethod)
+    {
+        $this->items = collect($this->items)->map(function ($question) use ($callback, $getMethod, $setMethod) {
+            $question->setQuestions(collect($question->getQuestions())->map(function ($item) use ($callback, $getMethod, $setMethod) {
+
+                $item->$setMethod($callback($item->$getMethod()));
+
+                return $item;
+            })->toArray());
+
+            return $question;
+        })->toArray();
+
+        return $this;
+    }
 }

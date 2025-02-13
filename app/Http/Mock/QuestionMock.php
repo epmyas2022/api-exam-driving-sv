@@ -9,7 +9,7 @@ class QuestionMock
             "id" => "e6c9b21f-4570-49f9-bb70-c1a200496049",
             "category" => "vmt",
             "total" => 5,
-            "listAnswer" => [
+            "listQuestions" => [
                 [
                     "id" => 445,
                     "question" => "¿Cuál es el nombre de esta señal?",

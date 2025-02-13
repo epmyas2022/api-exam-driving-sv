@@ -2,12 +2,21 @@
 
 namespace App\Domain\Entities;
 
-class ItemQuestionEntity{
+use App\Domain\ValueObjects\AnswerItem;
+use App\Domain\ValueObjects\WildCard;
+
+class ItemQuestionEntity
+{
 
     private int $id;
     private string $question;
     private ?string $image;
     private float $percentage;
+
+    /**
+     * @var array<key, WildCard[]>|null
+     */
+    private ?array $wildcards;
 
     /**
      * @var AnswerItem[]
@@ -19,13 +28,15 @@ class ItemQuestionEntity{
         string $question,
         ?string $image,
         float $percentage,
-        array $answers
+        array $answers,
+        ?array $wildcards = null
     ) {
         $this->id = $id;
         $this->question = $question;
         $this->image = $image;
         $this->percentage = $percentage;
         $this->answers = $answers;
+        $this->wildcards = $wildcards;
     }
 
     public function getId(): int
@@ -48,16 +59,15 @@ class ItemQuestionEntity{
         return $this->percentage;
     }
 
-    public function addQuestion( $question): void
+    public function addQuestion($question): void
     {
         $this->question = $question;
     }
 
-    public function addImage( $image): void
+    public function addImage($image): void
     {
         $this->image = $image;
     }
-
 
     /**
      * @return AnswerItem[]
@@ -75,8 +85,13 @@ class ItemQuestionEntity{
             'question' => $this->question,
             'image' => $this->image,
             'percentage' => $this->percentage,
+            'wildcards' => $this->wildcards ?
+                array_map(
+                    fn($wildcard) =>
+                    array_map(fn($wildcard) => $wildcard->toArray(), $wildcard),
+                    array_keys($this->wildcards)
+                ) : null,
             'answers' => array_map(fn($answer) => $answer->toArray(), $this->answers)
         ];
     }
-
 }

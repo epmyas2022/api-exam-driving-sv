@@ -79,7 +79,7 @@ class QuestionEntity
                         $question['answers']
                     )
                 ),
-                $data['listAnswer']
+                $data['listQuestions']
             )
         );
     }
@@ -90,7 +90,7 @@ class QuestionEntity
             'id' => $this->header->getId(),
             'category' => $this->header->getCategory(),
             'total' => $this->header->getTotal(),
-            'listAnswer' => array_map(
+            'listQuestions' => array_map(
                 fn($question) => $question->toArray(),
                 $this->questions
             )

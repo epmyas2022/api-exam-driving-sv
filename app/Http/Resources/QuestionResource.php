@@ -23,7 +23,7 @@ class QuestionResource extends JsonResource
             'question' => $this->resource?->getQuestion(),
             'image' => $this->resource?->getUrlImage(),
             'percentage' => $this->resource?->getPercentage(),
-            'listAnswers' => collect($this->resource?->getAnswers())->map(fn($answer, $index) => [
+            'listQuestionss' => collect($this->resource?->getAnswers())->map(fn($answer, $index) => [
                 'answer' => $answer,
                 'isCorrect' => $index === $this->getCorrectAnswer() - 1
             ])
