@@ -24,7 +24,7 @@ class GetQuestionsExamUseCase
      * Get all questions
      * @param string|null $type
      */
-    public function execute(?string $type)
+    public function execute(?string $type, ?int $number)
     {
         $questions =  $this->examRepository->questions($type);
 
@@ -37,6 +37,6 @@ class GetQuestionsExamUseCase
                 }
             }
         }
-        return $this->persistenceRepository->all($type);
+        return $this->persistenceRepository->all($type, $number);
     }
 }

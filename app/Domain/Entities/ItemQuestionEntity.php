@@ -3,7 +3,7 @@
 namespace App\Domain\Entities;
 
 use App\Domain\ValueObjects\AnswerItem;
-use App\Domain\ValueObjects\WildCard;
+use App\Domain\ValueObjects\Lifeline;
 
 class ItemQuestionEntity
 {
@@ -14,9 +14,9 @@ class ItemQuestionEntity
     private float $percentage;
 
     /**
-     * @var array<key, WildCard[]>|null
+     * @var array<key, Lifeline[]>|null
      */
-    private ?array $wildcards;
+    private ?array $lifelines;
 
     /**
      * @var AnswerItem[]
@@ -29,14 +29,14 @@ class ItemQuestionEntity
         ?string $image,
         float $percentage,
         array $answers,
-        ?array $wildcards = null
+        ?array $lifelines = null
     ) {
         $this->id = $id;
         $this->question = $question;
         $this->image = $image;
         $this->percentage = $percentage;
         $this->answers = $answers;
-        $this->wildcards = $wildcards;
+        $this->lifelines = $lifelines;
     }
 
     public function getId(): int
@@ -69,12 +69,22 @@ class ItemQuestionEntity
         $this->image = $image;
     }
 
+    public function addAnswers(array $answers): void
+    {
+        $this->answers = $answers;
+    }
+
     /**
      * @return AnswerItem[]
      */
     public function getAnswers(): array
     {
         return $this->answers;
+    }
+
+    public function addLifeLines(array $lifelines): void
+    {
+        $this->lifelines = $lifelines;
     }
 
 
@@ -85,12 +95,10 @@ class ItemQuestionEntity
             'question' => $this->question,
             'image' => $this->image,
             'percentage' => $this->percentage,
-            'wildcards' => $this->wildcards ?
-                array_map(
-                    fn($wildcard) =>
-                    array_map(fn($wildcard) => $wildcard->toArray(), $wildcard),
-                    array_keys($this->wildcards)
-                ) : null,
+            'lifelines' => $this->lifelines ?
+                collect($this->lifelines)->map(fn($lifeline) =>
+                collect($lifeline)->map(fn($item) => $item->toArray()))
+                ->toArray() : null,
             'answers' => array_map(fn($answer) => $answer->toArray(), $this->answers)
         ];
     }

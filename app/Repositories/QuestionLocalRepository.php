@@ -2,10 +2,12 @@
 
 namespace App\Repositories;
 
+use App\Casts\AnswerRandomCast;
+use App\Casts\ImageQuestionCast;
+use App\Casts\LifelineQuestionCast;
 use App\Collections\QuestionCollection;
 use App\Domain\Entities\QuestionEntity;
 use App\Domain\Repositories\PersistenceRepository;
-use App\Http\Resources\QuestionResource;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
@@ -25,22 +27,26 @@ class QuestionLocalRepository extends PersistenceRepository
 
 
 
-    public function all(?string $type, int $number = 5)
+    public function all(?string $type, ?int $number)
     {
 
-        $castImage = fn($image) => $image ?
-            url(Storage::url(config('app.outputImage') . $image)) : null;
+        $castImage = new ImageQuestionCast();
+        $lifeline = new LifelineQuestionCast();
+        $answerRandom = new AnswerRandomCast();
+
+        $this->questionCollection = $this->questionCollection
+            ?->takeRandomInQuestions($number ?? 5)
+            ?->setCastQuestions($castImage)
+            ?->setCastQuestions($lifeline)
+            ?->setCastQuestions($answerRandom);
 
         if ($type) {
-            return $this->questionCollection->filterByCategory($type)
-                ?->takeRandomInQuestions($number)
-                ?->setCastImageQuestions($castImage)
+            return $this->questionCollection
+                ->filterByCategory($type)
                 ?->first()?->toArray();
         }
 
-        return $this->questionCollection
-            ?->setCastImageQuestions($castImage)
-            ?->takeRandomInQuestions($number);
+        return $this->questionCollection;
     }
     /**
      * Find question by id

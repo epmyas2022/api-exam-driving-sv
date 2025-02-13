@@ -2,7 +2,7 @@
 
 namespace App\Domain\ValueObjects;
 
-class WildCard
+class Lifeline
 {
 
     private string $answer;

@@ -4,6 +4,7 @@ namespace App\Collections;
 
 use App\Domain\Entities\ItemQuestionEntity;
 use App\Domain\Entities\QuestionEntity;
+use App\Domain\Interfaces\QuestionCast;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Collection;
 
@@ -108,30 +109,13 @@ class QuestionCollection extends Collection
     }
 
 
-    public function setCastImageQuestions($callback)
+    public function setCastQuestions(QuestionCast $cast)
     {
-        $this->items = collect($this->items)->map(function ($question) use ($callback) {
-            $question->setQuestions(collect($question->getQuestions())->map(function ($item) use ($callback) {
+        $this->items = collect($this->items)->map(function ($question) use ($cast) {
+            $question->setQuestions(collect($question->getQuestions())->map(function ($item) use ($cast) {
 
-                $item->addImage($callback($item->getImage()));
+                return $cast->serialize($item);
 
-                return $item;
-            })->toArray());
-
-            return $question;
-        })->toArray();
-
-        return $this;
-    }
-
-    public function setCastQuestions($callback, $getMethod, $setMethod)
-    {
-        $this->items = collect($this->items)->map(function ($question) use ($callback, $getMethod, $setMethod) {
-            $question->setQuestions(collect($question->getQuestions())->map(function ($item) use ($callback, $getMethod, $setMethod) {
-
-                $item->$setMethod($callback($item->$getMethod()));
-
-                return $item;
             })->toArray());
 
             return $question;
