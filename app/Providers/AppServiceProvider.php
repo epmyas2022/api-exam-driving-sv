@@ -19,7 +19,7 @@ class AppServiceProvider extends ServiceProvider
 
         $this->app->bind(
             ExamRepository::class,
-            RemoteExamRepository::class
+            LocalExamRepository::class
         );
 
         $this->app->bind(

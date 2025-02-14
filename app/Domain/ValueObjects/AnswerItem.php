@@ -2,15 +2,23 @@
 
 namespace App\Domain\ValueObjects;
 
-class AnswerItem {
+class AnswerItem
+{
 
     private string $answer;
     private bool $isCorrect;
+    private int $weight;
 
-    public function __construct(string $answer, bool $isCorrect)
-    {
+    public function __construct(
+        string $answer,
+        bool $isCorrect,
+        int $biasCorrect = 40
+    ) {
         $this->answer = $answer;
         $this->isCorrect = $isCorrect;
+
+        $this->weight = $isCorrect ? rand($biasCorrect, 100) :
+            rand(0, $biasCorrect);
     }
 
     public function getAnswer(): string
@@ -21,6 +29,11 @@ class AnswerItem {
     public function isCorrect(): bool
     {
         return $this->isCorrect;
+    }
+
+    public function getWeight(): int
+    {
+        return $this->weight;
     }
 
     public function toArray(): array

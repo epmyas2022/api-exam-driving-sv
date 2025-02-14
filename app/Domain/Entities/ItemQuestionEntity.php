@@ -87,6 +87,15 @@ class ItemQuestionEntity
         $this->lifelines = $lifelines;
     }
 
+    public function getWeightAnswers(): float
+    {
+        return array_reduce(
+            $this->answers,
+            fn($carry, $answer) => $carry + $answer->getWeight(),
+            0
+        );
+    }
+
 
     public function toArray(): array
     {
@@ -96,9 +105,10 @@ class ItemQuestionEntity
             'image' => $this->image,
             'percentage' => $this->percentage,
             'lifelines' => $this->lifelines ?
-                collect($this->lifelines)->map(fn($lifeline) =>
-                collect($lifeline)->map(fn($item) => $item->toArray()))
-                ->toArray() : null,
+                array_map(
+                    fn($lifeline) => array_map(fn($item) => $item->toArray(), $lifeline),
+                    $this->lifelines
+                ) : null,
             'answers' => array_map(fn($answer) => $answer->toArray(), $this->answers)
         ];
     }

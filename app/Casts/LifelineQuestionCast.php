@@ -5,26 +5,31 @@ namespace App\Casts;
 use App\Domain\Entities\ItemQuestionEntity;
 use App\Domain\Interfaces\QuestionCast;
 use App\Domain\ValueObjects\Lifeline;
+use Brick\Math\BigDecimal;
+use Brick\Math\RoundingMode;
 
 class LifelineQuestionCast implements QuestionCast
 {
     public function serialize(ItemQuestionEntity $value): ItemQuestionEntity
     {
 
-        $value->addLifeLines([
-            'fifty_fifty' => [
 
-                new Lifeline('A', 50),
-                new Lifeline('B', 50)
-            ],
-            'public' => [
-                new Lifeline('A', 25),
-                new Lifeline('B', 25),
-                new Lifeline('C', 25),
-                new Lifeline('D', 25)
-            ],
+
+        $value->addLifeLines([
+            'fifty_fifty' => [],
+            'public' => collect($value->getAnswers())->map(function ($answer) use ($value) {
+
+                dd($value->getWeightAnswers());
+                $forecast = BigDecimal::of($answer->getWeight())
+                    ->dividedBy(round($value->getWeightAnswers()), 2, RoundingMode::HALF_UP)
+                    ->multipliedBy(100)
+                    ->toScale(6)->toFloat();
+
+                return new Lifeline($answer->getAnswer(), $forecast);
+            })->toArray()
 
         ]);
+
 
         return $value;
     }
