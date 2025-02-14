@@ -87,7 +87,7 @@ class ItemQuestionEntity
         $this->lifelines = $lifelines;
     }
 
-    public function getWeightAnswers(): float
+    public function getWeightAnswers(): int
     {
         return array_reduce(
             $this->answers,

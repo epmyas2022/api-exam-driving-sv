@@ -19,11 +19,12 @@ class LifelineQuestionCast implements QuestionCast
             'fifty_fifty' => [],
             'public' => collect($value->getAnswers())->map(function ($answer) use ($value) {
 
-                dd($value->getWeightAnswers());
                 $forecast = BigDecimal::of($answer->getWeight())
-                    ->dividedBy(round($value->getWeightAnswers()), 2, RoundingMode::HALF_UP)
+                    ->dividedBy($value->getWeightAnswers(), 8, RoundingMode::HALF_UP)
                     ->multipliedBy(100)
-                    ->toScale(6)->toFloat();
+                    ->toScale(2, RoundingMode::HALF_UP);
+
+
 
                 return new Lifeline($answer->getAnswer(), $forecast);
             })->toArray()

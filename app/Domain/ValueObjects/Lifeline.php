@@ -6,12 +6,12 @@ class Lifeline
 {
 
     private string $answer;
-    private ?float $percentage;
+    private  $percentage;
     private ?string $help;
 
     public function __construct(
         string $answer,
-        ?float $percentage = null,
+         $percentage = null,
         ?string $help = null
     ) {
         $this->answer = $answer;
@@ -20,7 +20,7 @@ class Lifeline
     }
 
 
-    public function getPercentage(): float
+    public function getPercentage()
     {
         return $this->percentage;
     }
