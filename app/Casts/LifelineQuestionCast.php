@@ -16,7 +16,10 @@ class LifelineQuestionCast implements QuestionCast
 
 
         $value->addLifeLines([
-            'fifty_fifty' => [],
+            'fifty_fifty' => [
+                collect($value->getAnswers())->filter(fn($answer) => $answer->isCorrect())->random(),
+                collect($value->getAnswers())->filter(fn($answer) => !$answer->isCorrect())->random()
+            ],
             'public' => collect($value->getAnswers())->map(function ($answer) use ($value) {
 
                 $forecast = BigDecimal::of($answer->getWeight())
