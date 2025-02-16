@@ -12,13 +12,13 @@ class AnswerItem
     public function __construct(
         string $answer,
         bool $isCorrect,
-        int $biasCorrect = 50
+        int $biasCorrect = 5
     ) {
         $this->answer = $answer;
         $this->isCorrect = $isCorrect;
 
-        $random = random_int(0, 100);
-        $this->weight = $isCorrect ? $biasCorrect + $random : 100 - $random;
+        $random = random_int(0, 10);
+        $this->weight = $isCorrect ? $biasCorrect + $random : 10 - $random;
     }
 
     public function getAnswer(): string

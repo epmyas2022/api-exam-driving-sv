@@ -20,9 +20,9 @@ class LifelineQuestionCast implements QuestionCast
             'public' => collect($value->getAnswers())->map(function ($answer) use ($value) {
 
                 $forecast = BigDecimal::of($answer->getWeight())
-                    ->dividedBy($value->getWeightAnswers(), 8, RoundingMode::HALF_UP)
+                    ->dividedBy($value->getWeightAnswers(), 14, RoundingMode::HALF_EVEN)
                     ->multipliedBy(100)
-                    ->toScale(2, RoundingMode::HALF_UP);
+                    ->toScale(2, RoundingMode::HALF_FLOOR);
 
 
 
