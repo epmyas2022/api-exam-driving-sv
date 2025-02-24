@@ -13,10 +13,13 @@ class CheckboxComponent extends Component
      */
 
     public string $text;
-    public function __construct($text)
+    public int $id;
+    public function __construct($text, int $id)
     {
         $this->text = $text;
+        $this->id = $id;
     }
+
 
     /**
      * Get the view / contents that represent the component.

@@ -25,4 +25,10 @@ enum ExamType: string
         }
         return self::tryFrom($value)?->value ?? $default?->value;
     }
+
+
+    public function toStr(): string
+    {
+        return $this->value;
+    }
 }
