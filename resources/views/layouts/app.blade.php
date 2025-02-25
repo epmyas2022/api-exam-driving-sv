@@ -16,6 +16,9 @@
 
 </head>
 
+
+<header class=" bg-amber-500 h-5">
+</header>
 <body class="text-white bg-gradient-to-r from-slate-900 to-slate-800 w-full h-dvh">
 
     @yield('content')

@@ -15,4 +15,8 @@ use Illuminate\Support\Facades\Route;
 */
 
 
-Route::get('/', QuestionController::class . '@ui');
+Route::get('/questions', QuestionController::class . '@ui')->name('questions');
+Route::post('/questions', QuestionController::class . '@ui')->name('questions');
+
+
+Route::get('/', QuestionController::class . '@uiCategories')->name('categories');

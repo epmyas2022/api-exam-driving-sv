@@ -12,6 +12,8 @@ use Laravel\Swagger\Attributes\SwaggerResponse;
 use Laravel\Swagger\Attributes\SwaggerSection;
 use Laravel\Swagger\Attributes\SwaggerSummary;
 use App\Enums\ExamType;
+use App\Http\Requests\v1\UIQuestionsRequest;
+use App\Utils\ExamUtil;
 
 #[SwaggerSection("Question")]
 class QuestionController extends Controller
@@ -32,12 +34,31 @@ class QuestionController extends Controller
         return response()->json($questions, 200, [], JSON_UNESCAPED_SLASHES);
     }
 
-    public function ui(FilterQuestionRequest $request): View
+    public function ui(UIQuestionsRequest $request): View
     {
+
+        $currentQuestion = $request->currentQuestion ?? -1;
+
+        if(ExamUtil::isMaxTimeExpired()) {
+            return view('exam-expired');
+        }
 
         $questions = $this->getQuestionUseCase->execute($request?->exam ??
             ExamType::GENERAL->toStr(), $request->size);
 
-        return view('questions', $questions);
+        if (count($questions) - 1 < $request->currentQuestion) {
+            $currentQuestion = -1;
+        }
+
+        return view('questions', array_merge(
+            $questions,
+            ['currentQuestion' => $currentQuestion + 1]
+        ));
+    }
+
+
+    public function uiCategories(): View
+    {
+        return view('categories');
     }
 }

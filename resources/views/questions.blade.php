@@ -1,24 +1,32 @@
 @extends('layouts.app')
 
 @section('content')
-    <form class="flex flex-col items-center justify-center w-full h-full space-y-4 p-2">
+    <form class="flex flex-col items-center justify-center w-full h-full space-y-4 p-2"
+        action="{{ route('questions', ['currentQuestion' => $currentQuestion]) }}", method="POST">
+        @csrf
+
+        <div>
+            <x-progress-exam-component :step="$currentQuestion" :total="count($listQuestions)" />
+        </div>
         <h1 class="text-4xl font-bold text-center text-white font-anton p-10">
             Exam Driving SV
         </h1>
 
-        <h2 class="text-balance  md:w-2xl text-center text-sm/7">{{ $listQuestions[0]['question'] }} </h2>
+        <h2 class="text-balance  md:w-2xl text-center text-sm/7">
+            {{ $listQuestions[$currentQuestion]['question'] }}
+        </h2>
 
-        @if (isset($listQuestions[0]['image']))
-            <img src="{{$listQuestions[0]['image']}}" alt="señal de transito" />
-        @endif
+
+        @isset($listQuestions[$currentQuestion]['image'])
+            <img src="{{ $listQuestions[$currentQuestion]['image'] }}" alt="Señal de trasito" class="aspect-ratio--1x1">
+        @endisset
+
+
         <div class="flex flex-col gap-2 md:max-w-2xl" x-data="{ value: null }">
 
-
-            @foreach ($listQuestions[0]['answers'] as $index => $answer)
-                <x-checkbox-component :text="$answer['answer']" :id="$index" />
+            @foreach ($listQuestions[$currentQuestion]['answers'] as $index => $question)
+                <x-checkbox-component :id="$index" :text="$question['answer']" />
             @endforeach
-
-
         </div>
         <br>
         <div class="flex md:flex-row flex-col gap-4">

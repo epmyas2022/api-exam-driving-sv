@@ -12,9 +12,12 @@ class CheckboxComponent extends Component
      * Create a new component instance.
      */
 
-    public string $text;
-    public int $id;
-    public function __construct($text, int $id)
+
+
+     public string $text;
+     public int $id;
+
+    public function __construct(string $text, int $id)
     {
         $this->text = $text;
         $this->id = $id;
