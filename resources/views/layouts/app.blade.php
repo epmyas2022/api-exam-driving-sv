@@ -19,7 +19,7 @@
 
 <header class=" bg-amber-500 h-5">
 </header>
-<body class="text-white bg-gradient-to-r from-slate-900 to-slate-800 w-full h-dvh">
+<body class="text-white bg-gradient-to-r from-slate-900 to-slate-800 w-full  min-h-dvh">
 
     @yield('content')
 

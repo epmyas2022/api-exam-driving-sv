@@ -1,12 +1,12 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="flex flex-col justify-center items-center h-full gap-8">
-        <h1 class="text-3xl font-bold">El tiempo ha terminado
+    <div class="flex flex-col justify-center items-center h-dvh gap-8 p-4">
+        <h1 class="text-3xl font-bold text-center">El tiempo ha terminado
         </h1>
 
         <img src="{{ asset('images/time-expired.svg') }}" alt="Icono de reloj" class="h-48">
-        <p>
+        <p class="text-center">
             El tiempo para realizar el examen ha expirado, por favor intenta de nuevo.
         </p>
 

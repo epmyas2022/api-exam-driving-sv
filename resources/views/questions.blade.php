@@ -1,11 +1,13 @@
 @extends('layouts.app')
 
 @section('content')
-    <form class="flex flex-col items-center justify-center w-full h-full space-y-4 p-2"
+    <form class="flex flex-col items-center justify-center w-full h-dvh space-y-4 p-2"
         action="{{ route('questions', ['currentQuestion' => $currentQuestion]) }}", method="POST">
         @csrf
 
+
         <div>
+            <x-timer-component :time="$time"></x-timer-component>
             <x-progress-exam-component :step="$currentQuestion" :total="count($listQuestions)" />
         </div>
         <h1 class="text-4xl font-bold text-center text-white font-anton p-10">

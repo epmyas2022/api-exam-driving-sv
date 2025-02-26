@@ -39,7 +39,7 @@ class QuestionController extends Controller
 
         $currentQuestion = $request->currentQuestion ?? -1;
 
-        if(ExamUtil::isMaxTimeExpired()) {
+        if (ExamUtil::isMaxTimeExpired()) {
             return view('exam-expired');
         }
 
@@ -52,7 +52,10 @@ class QuestionController extends Controller
 
         return view('questions', array_merge(
             $questions,
-            ['currentQuestion' => $currentQuestion + 1]
+            [
+                'currentQuestion' => $currentQuestion + 1,
+                'time' => ExamUtil::remainingTime()
+            ]
         ));
     }
 
