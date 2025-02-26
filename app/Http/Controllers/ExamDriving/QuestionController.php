@@ -13,7 +13,7 @@ use Laravel\Swagger\Attributes\SwaggerSection;
 use Laravel\Swagger\Attributes\SwaggerSummary;
 use App\Enums\ExamType;
 use App\Http\Requests\v1\UIQuestionsRequest;
-use App\Utils\ExamUtil;
+use Inertia\Inertia;
 
 #[SwaggerSection("Question")]
 class QuestionController extends Controller
@@ -34,34 +34,19 @@ class QuestionController extends Controller
         return response()->json($questions, 200, [], JSON_UNESCAPED_SLASHES);
     }
 
-    public function ui(UIQuestionsRequest $request): View
-    {
 
-        $currentQuestion = $request->currentQuestion ?? -1;
+    public  function uiQuestion(string $type){
 
-        if (ExamUtil::isMaxTimeExpired()) {
-            return view('exam-expired');
-        }
+        $examQuestion = $this->getQuestionUseCase->execute($type ??
+            ExamType::GENERAL->toStr(), 30);
 
-        $questions = $this->getQuestionUseCase->execute($request?->exam ??
-            ExamType::GENERAL->toStr(), $request->size);
 
-        if (count($questions) - 1 < $request->currentQuestion) {
-            $currentQuestion = -1;
-        }
-
-        return view('questions', array_merge(
-            $questions,
-            [
-                'currentQuestion' => $currentQuestion + 1,
-                'time' => ExamUtil::remainingTime()
-            ]
-        ));
+        return Inertia::render('Exam/Question', ['examQuestion' => $examQuestion]);
     }
 
 
-    public function uiCategories(): View
+    public function uiCategories()
     {
-        return view('categories');
+        return Inertia::render('Exam/Categories');
     }
 }

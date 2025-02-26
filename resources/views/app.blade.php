@@ -5,6 +5,9 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     @vite('resources/css/app.css')
+    @vite('resources/js/app.js')
+    @inertiaHead
+
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
     <title>Exam driving</title>
@@ -19,10 +22,12 @@
 
 <header class=" bg-amber-500 h-5">
 </header>
+
 <body class="text-white bg-gradient-to-r from-slate-900 to-slate-800 w-full  min-h-dvh">
+    @inertia
 
-    @yield('content')
 
+    <div id="app"></div>
 </body>
 
 </html>
