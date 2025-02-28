@@ -3,7 +3,7 @@
         class="border-2 rounded-full w-10 flex justify-center items-center h-10 relative"
     >
         <div
-            :class="`border-[1.1rem] animate-spin rounded-full left-0 right-0
+            :class="`border-[1.1rem] ${!stop ? 'animate-spin' :''} left-0 right-0 rounded-full
             absolute
              ${time / total == 0 ? 'border-l-transparent' : 'border-l-yellow-500'}
              ${time / total < 0.6 ? 'border-r-transparent' : 'border-r-amber-500'}
@@ -22,12 +22,17 @@ const time = defineModel<number>();
 
 const emit = defineEmits(["timeOut"]);
 
+const stop = defineModel<boolean>('stop');
+
 const total = time.value;
 
 console.log(total);
 
 onMounted(() => {
     setInterval(() => {
+        if (stop.value) {
+            return;
+        }
         if (time.value === 0) {
             emit("timeOut");
             return;

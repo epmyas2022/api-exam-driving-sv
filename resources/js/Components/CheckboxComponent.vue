@@ -58,6 +58,8 @@ const errorAnswer = defineModel("errorAnswer");
 
 const isCorrectAnswer = defineModel("isCorrectAnswer");
 
+const emits = defineEmits(['selectedAnswer']);
+
 const borderColor = () => {
     if (errorAnswer.value) {
         return "border-red-500 bg-red-300";
@@ -69,7 +71,8 @@ const borderColor = () => {
 const change = (event) => {
     value.value = isCorrectAnswer ? props.id : null;
 
-    console.log(isCorrectAnswer.value);
     errorAnswer.value = !isCorrectAnswer.value;
+
+    emits('selectedAnswer', value.value);
 };
 </script>

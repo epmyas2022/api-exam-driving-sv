@@ -16,7 +16,7 @@
                     :max="questions.length"
                 />
 
-                <TimerComponent v-model="timer" />
+                <TimerComponent v-model="timer"v-model:stop="stopTimer" />
             </div>
 
             <h2 class="text-balance md:w-2xl text-center text-sm/7">
@@ -37,6 +37,7 @@
                     :key="index"
                     :id="index"
                     :text="answer.answer"
+                    @selected-answer="stopTimer = true"
                     v-model="selectedAnswer"
                     v-model:isCorrectAnswer="answer.isCorrect"
                     v-model:errorAnswer="errorAnswer"
@@ -82,6 +83,7 @@ import ProgressComponent from "../../Components/ProgressComponent.vue";
 import TimerComponent from "../../Components/TimerComponent.vue";
 import ModalComponent from "../../Components/ModalComponent.vue";
 import LifelinesComponent from "../../Components/LifelinesComponent.vue";
+
 const props = defineProps({
     examQuestion: {
         type: Object,
@@ -94,13 +96,18 @@ const questions = props.examQuestion.listQuestions;
 const timer = ref(60);
 const errorAnswer = ref(false);
 
+const stopTimer = ref(false);
+
 const currentQuestion = ref(0);
 
 const selectedAnswer = ref(null);
 
+
+
 const clear = () => {
     selectedAnswer.value = null;
     errorAnswer.value = false;
+    stopTimer.value = false;
     timer.value = 60;
 };
 
