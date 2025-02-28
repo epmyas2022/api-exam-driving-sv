@@ -7,7 +7,7 @@
         >
             <input
                 :disabled="value !== null || errorAnswer"
-                id="ripple-on"
+                :id="`ripple-on-${props.id}`"
                 ref="input"
                 type="checkbox"
                 v-model="value"
@@ -38,7 +38,7 @@
                 </svg>
             </span>
         </p>
-        <label class="cursor-pointer text-slate-300 text-sm" for="ripple-on">
+        <label class="cursor-pointer text-slate-300 text-sm" :for="`ripple-on-${props.id}`">
             {{ text }}
         </label>
     </div>
