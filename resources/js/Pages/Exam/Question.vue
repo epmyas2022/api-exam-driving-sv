@@ -2,14 +2,16 @@
     <div
         class="flex flex-col items-center justify-center w-full h-dvh space-y-4 p-2"
     >
-        <div class="flex gap-2 items-center">
-            <ProgressComponent :progress="(currentQuestion / questions.length * 100) - 4" />
-
-            <TimerComponent v-model="timer" />
-        </div>
         <h1 class="text-4xl font-bold text-center text-white font-anton p-10">
             Exam Driving SV
         </h1>
+        <div class="flex gap-2 items-center justify-center flex-wrap">
+            <ProgressComponent
+                :progress="(currentQuestion / questions.length) * 100 - 4"
+            />
+
+            <TimerComponent v-model="timer" />
+        </div>
 
         <h2 class="text-balance md:w-2xl text-center text-sm/7">
             {{ questions[currentQuestion].question }}
@@ -29,6 +31,8 @@
                 :id="index"
                 :text="answer.answer"
                 v-model="selectedAnswer"
+                v-model:isCorrectAnswer="answer.isCorrect"
+                v-model:errorAnswer="errorAnswer"
             />
         </div>
         <br />
@@ -86,7 +90,7 @@
             </button>
 
             <button
-                @click="currentQuestion++; clear()"
+                @click="next"
                 :disabled="currentQuestion === questions.length - 1"
                 class="px-4 py-2 flex justify-center rounded-full bg-teal-500 text-white font-bold transition duration-200 hover:bg-white hover:text-black border-2 border-transparent hover:border-teal-500 cursor-pointer"
             >
@@ -118,7 +122,6 @@ import CheckboxComponent from "../../Components/CheckboxComponent.vue";
 import ProgressComponent from "../../Components/ProgressComponent.vue";
 import TimerComponent from "../../Components/TimerComponent.vue";
 
-
 const props = defineProps({
     examQuestion: {
         type: Object,
@@ -126,9 +129,10 @@ const props = defineProps({
     },
 });
 
-const questions = ref(props.examQuestion.listQuestions);
+const questions = props.examQuestion.listQuestions;
 
 const timer = ref(60);
+const errorAnswer = ref(false);
 
 const currentQuestion = ref(0);
 
@@ -136,6 +140,15 @@ const selectedAnswer = ref(null);
 
 const clear = () => {
     selectedAnswer.value = null;
+    errorAnswer.value = false;
     timer.value = 60;
+};
+
+const next = () => {
+    if (selectedAnswer.value == null) return;
+    currentQuestion.value++;
+
+
+    clear();
 };
 </script>

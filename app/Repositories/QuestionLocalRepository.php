@@ -2,7 +2,6 @@
 
 namespace App\Repositories;
 
-use App\Casts\AnswerRandomCast;
 use App\Casts\ImageQuestionCast;
 use App\Casts\LifelineQuestionCast;
 use App\Collections\QuestionCollection;
@@ -32,14 +31,11 @@ class QuestionLocalRepository extends PersistenceRepository
 
         $castImage = new ImageQuestionCast();
         $lifeline = new LifelineQuestionCast();
-        $answerRandom = new AnswerRandomCast();
 
         $this->questionCollection = $this->questionCollection
             ?->takeRandomInQuestions($number ?? 5)
             ?->setCastQuestions($castImage)
-            ?->setCastQuestions($lifeline)
-            ?->setCastQuestions($answerRandom);
-
+            ?->setCastQuestions($lifeline);
         if ($type) {
             return $this->questionCollection
                 ->filterByCategory($type)

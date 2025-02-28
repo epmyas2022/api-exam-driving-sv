@@ -1,6 +1,6 @@
 <template>
     <div
-        class="flex flex-col justify-center items-center h-dvh w-full gap-2 p-4"
+        class="flex flex-col justify-center items-center md:h-dvh w-full gap-2 p-4"
     >
         <h1 class="text-3xl font-bold">Tipos de examen</h1>
         <p>Selecciona el tipo de examen que deseas realizar.</p>
