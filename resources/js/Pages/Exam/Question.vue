@@ -3,7 +3,7 @@
         <ModalComponent></ModalComponent>
 
         <div
-            class="flex flex-col items-center justify-center w-full h-dvh space-y-4 p-2"
+            class="flex flex-col items-center justify-center w-full md:h-dvh space-y-4 p-2"
         >
             <h1
                 class="text-4xl font-bold text-center text-white font-anton p-10"
