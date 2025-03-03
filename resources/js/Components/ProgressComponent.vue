@@ -20,7 +20,7 @@ const props = defineProps<{
     max: number;
 }>();
 
-const progress = defineModel<number>("progress");
+const progress = defineModel<number>("progress", { default: 0 });
 
 const bar = ref<HTMLElement | null>(null);
 

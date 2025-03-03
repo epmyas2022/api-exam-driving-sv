@@ -18,15 +18,13 @@
 <script setup lang="ts">
 import { defineModel, onMounted } from "vue";
 
-const time = defineModel<number>();
+const time = defineModel<number>({ default: 0 });
 
 const emit = defineEmits(["timeOut"]);
 
 const stop = defineModel<boolean>('stop');
 
 const total = time.value;
-
-console.log(total);
 
 onMounted(() => {
     setInterval(() => {

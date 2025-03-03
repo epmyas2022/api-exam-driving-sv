@@ -7,3 +7,10 @@
     --font-anton: "Anton", sans-serif;
     --font-raleway: "Raleway", sans-serif;
 }
+
+
+@layer components {
+    .btn-primary {
+        @apply bg-teal-500 text-white font-bold transition duration-200 hover:bg-white hover:text-black border-2 border-transparent hover:border-teal-500 cursor-pointer;
+    }
+}
