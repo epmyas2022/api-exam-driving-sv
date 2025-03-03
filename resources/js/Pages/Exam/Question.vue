@@ -5,7 +5,7 @@
                 <h1 class="font-bold text-2xl mb-2">Terminaste el examen</h1>
                 <div>
                     <svg
-                        v-if="score > 5"
+                        v-if="score > 6"
                         xmlns="http://www.w3.org/2000/svg"
                         width="50"
                         height="50"
@@ -48,7 +48,7 @@
                     Tu puntuación es de
                     <span
                         :class="`text-3xl font-bold ${
-                            score > 5 ? 'text-teal-500' : 'text-red-400'
+                            score > 6 ? 'text-teal-500' : 'text-red-400'
                         }`"
                     >
                         {{ score.toFixed() }}
